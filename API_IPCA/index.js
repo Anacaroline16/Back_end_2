@@ -3,6 +3,40 @@ import {buscar_td_Dados_ipca, buscar_ipcaPorAno, buscar_ipca_porId, valor_reajus
 
 const app = express();
 
+
+
+
+app.get('/historicoIPCA/calculo', (req, res) => {
+    const { valor, mesInicial, anoInicial, mesFinal, anoFinal } = req.query;
+
+    if (!valor || !mesInicial || !anoInicial || !mesFinal || !anoFinal || 
+        isNaN(valor) || isNaN(mesInicial) || isNaN(anoInicial) || isNaN(mesFinal) || isNaN(anoFinal)) {
+        return res.status(400).json({ 'erro': 'Parâmetros inválidos ou não numéricos.' });
+    }
+
+    const valorConvertido = parseFloat(valor);
+    const mesInicialConvertido = parseInt(mesInicial);
+    const anoInicialConvertido = parseInt(anoInicial);
+    const mesFinalConvertido = parseInt(mesFinal);
+    const anoFinalConvertido = parseInt(anoFinal);
+
+    console.log("Parâmetros válidos:", valorConvertido, mesInicialConvertido, anoInicialConvertido, mesFinalConvertido, anoFinalConvertido);
+
+    try {
+        const resultado = valor_reajustado(
+            valorConvertido,
+            mesInicialConvertido,
+            anoInicialConvertido,
+            mesFinalConvertido,
+            anoFinalConvertido
+        );
+        res.json({ valor_reajustado: resultado });
+    } catch (error) {
+        res.status(400).json({ erro: error.message });
+    }
+});
+
+
 app.get('/historicoIPCA', (req, res) => {
     const ano = req.query.ano;
     const resultado = ano ? buscar_ipcaPorAno(ano): buscar_td_Dados_ipca();
@@ -23,27 +57,7 @@ app.get('/historicoIPCA/:id', (req,res) => {
     }
 });
 
-app.get('/historicoIPCA/calculo', (req, res) => {
-    const {valor , mesInicial, anoInicial, mesFinal, anoFinal} = req.query;
-    
-    if (!valor || !mesInicial || !anoInicial || !mesFinal ||!anoFinal){
-        res.status(400).json({'erro': 'Parâmentros inválidos.'});
-    }
-    try{
-        const resultado = valor_reajustado(
-            parseFloat(valor),
-            parseInt(mesInicial),
-            parseInt(anoInicial),
-            parseInt(mesFinal),
-            parseInt(anoFinal)
-        );
-        res.json({valor_reajustado: resultado});
-    } catch (error){
-        res.status(400).json({erro: error.message});
-    }
-    
-    
-});
+
 
 
 app.listen(8080,() => {
