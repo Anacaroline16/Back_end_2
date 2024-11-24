@@ -1,5 +1,5 @@
 import  express  from "express";
-import {buscar_td_Dados_ipca, buscar_ipcaPorAno} from  './servicos/servico.js'
+import {buscar_td_Dados_ipca, buscar_ipcaPorAno, buscar_ipca_porId} from  './servicos/servico.js'
 
 const app = express();
 
@@ -13,11 +13,10 @@ app.get('/historicoIPCA', (req, res) => {
     }
 });
 app.get('/historicoIPCA/:id', (req,res) => {
-    const uf = buscarUfPorId(req.params.iduf);
-
+    const uf = buscar_ipca_porId(req.params.id);
     if(uf){
         res.json(uf);
-    } else if (isNaN(parseInt(req.params.iduf))){
+    } else if (isNaN(parseInt(req.params.id))){
         res.status(400).send({'erro' : 'Requisição inválida'});
     } else {
         res.status(404).send({'erro': 'UF não encontrada'});
