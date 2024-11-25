@@ -1,36 +1,21 @@
 import historicoInflacao from "../dados/dados.js";
 
 
-export const valor_reajustado = (valor , mesInicial , anoInicial, mesFinal, anoFinal ) => {
+export function valor_reajustado(valor, mesInicial, anoInicial, mesFinal, anoFinal, dadosFil_historico) {
+    console.log('dadosrecebidos na funcao', dadosFil_historico);
+    const historicoFiltrado = dadosFil_historico.filter(dado => 
+        (dado.ano > anoInicial || (dado.ano === anoInicial && dado.mes >= mesInicial)) &&
+        (dado.ano < anoFinal || (dado.ano === anoFinal && dado.mes <= mesFinal))
+    );
 
-    
-    if (!valor || valor <= 0){
-        throw new Error('O valor inicial deve ser maior que 0.');
+    if (historicoFiltrado.length === 0) {
+        throw new Error('Nenhum índice encontrado para os dados fornecidos.');
     }
-    if (anoInicial> anoFinal || (anoInicial===anoFinal && mesInicial> mesFinal)){
-        throw new Error('O intervalo de datas é inválido .');
-    }
 
-    const dadosFiltrados = historicoInflacao.filter((ipca) => {
-        console.log(ipca);
-        return(
-            (ipca.ano >  anoInicial && ipca.ano < anoFinal) ||
-            (ipca.ano === anoInicial && ipca.mes >= mesInicial) ||
-            (ipca.ano === anoFinal && ipca.mes <= mesFinal) 
-        );
-    });
-    console.log('dados filtrados:', dadosFiltrados);
-    if (dadosFiltrados.length === 0){
-       throw new Error('Nenhum índice encontrado para os dados fornecido.');
-    };
-    let resultado = valor;
-    dadosFiltrados.forEach((ipca) => {
-        resultado *= (1 + ipca.ipca/ 100);
+    return historicoFiltrado.reduce((acc, dado) => acc * (1 + dado.ipca / 100), valor).toFixed(2);
+}
+  
 
-    });
-    
-    return resultado.toFixed(2);
-};
 
 export const buscar_td_Dados_ipca = () => {
     return historicoInflacao;
