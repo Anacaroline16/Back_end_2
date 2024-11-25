@@ -25,11 +25,11 @@ export const valor_reajustado = (valor , mesInicial , anoInicial, mesFinal, anoF
     };
     let resultado = valor;
     dadosFiltrados.forEach((ipca) => {
-        resultado *= (1 + ipca.valor / 100);
+        resultado *= (1 + ipca.ipca/ 100);
 
     });
     
-    return resultado;
+    return resultado.toFixed(2);
 };
 
 export const buscar_td_Dados_ipca = () => {

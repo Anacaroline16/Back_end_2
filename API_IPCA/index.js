@@ -40,7 +40,7 @@ app.get('/historicoIPCA/calculo', (req, res) => {
         );
         res.json({ valor_reajustado: resultado });
     } catch (error) {
-        res.status(400).json({ erro: error.message });
+        res.status(400).json({ erro: error.message});
     }
 });
 
