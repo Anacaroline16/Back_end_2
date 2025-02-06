@@ -1,7 +1,18 @@
 import express from 'express';
 import { retornaCampeonatos, retornaCampeonatosID, retornaCampeonatosAno, retornaCampeonatosTime } from "./servicos/retornaCampeonatos_servico.js";
+import { cadastraCampeonato } from './servicos/cadastroCampeonatos_servico.js';
 
 const app = express();
+app.use(express.json());//Suporte para JSON  
+
+app.post('/campeonatos', async(req,res) =>{
+    const campeao = req.body.campeao;
+    const vice = req.body.vice;
+    const ano = req.body.ano;
+    await cadastraCampeonato(campeao, vice, ano);
+    res.status(204).send({"Mensagem": "Cadastro efetivado com sucesso!"});
+
+})
 
 app.get('/campeonatos', async (req,res)=>{
     let campeonatos;
