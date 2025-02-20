@@ -4,6 +4,6 @@ const pool = msql.createPool ({
     host: 'localhost',
     user: 'root',
     password:'Cordeiropereira@123',
-    database:'cadastrodados'
+    database:'cadastroDados'
 });
 export default pool;

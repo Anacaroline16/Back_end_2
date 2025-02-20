@@ -1,15 +1,23 @@
 import pool from "./conexao.js";
 
-export async function cadastraDados() {
+export async function cadastraDados(nome, email, telefone) {
     const conexao = await pool.getConnection();
-    const query = ('INSERT INTO dadosCadastrados(nome, email, telefone )VALUES (?, ?, ?) ', [nome, email, telefone]);
-    const cadastra = executaQuery(conexao, query);
+    const query = 'INSERT INTO dadosCadastrados (nome, email, telefone) VALUES (?,?,?) ';
+    const [cadastra] = await conexao.execute(query, [nome, email, telefone]);
     conexao.release();
     return cadastra;
 }
 
-async function executaQuery(conexao, query) {
-    const resultado_query = await conexao.execute(query);
-    const resposta = resultado_query.query[0];
-    return resposta
-}
+
+// banco de dados
+
+// create database cadastroDados;
+
+// use cadastroDados;
+
+// create table dadosCadastrados(
+// 	id int not null auto_increment primary key,
+//     nome varchar(35),
+//     email varchar(35),
+//     telefone varchar(35)
+// );

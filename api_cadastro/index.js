@@ -8,9 +8,13 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/usuarios', async (req, res) =>{
-    const[nome, email, telefone] = req.body;
+    const{nome, email, telefone} = req.body;
+
+    // if (!nome || nome.lengt < 2){
+    //     return res.status(400).json()
+    // }
     await cadastraDados(nome, email, telefone);
-    res.status(204).send({"Mensagem" : "Cadastro efetivado com sucesso"});
+    res.status(200).send({"Mensagem" : "Cadastro efetivado com sucesso"});
 })
 
 app.listen(9000, async() =>{
